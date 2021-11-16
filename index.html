@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<!-- iOS support -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="QuickColor" />
+    <meta name="theme-color" id="theme" content="midnightblue" />
+      <title>
+        QuickColor⠀|⠀𝘽𝙪𝙨𝙩𝙡.•io
+      </title>
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="author" content="ShortcutsPro" />
+<!-- open graph link support -->
+    <meta property="og:title" content="QuickColor⠀|⠀𝘽𝙪𝙨𝙩𝙡.•io" />
+    <meta property="og:image" content="image.jpeg" />
+    <meta property="og:description" content="a colorpicker for iOS Shortcuts" />
+    <link rel="icon" href="apple-touch-icon.png" />
+    <style>
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html {
+        font-family: 'Acme', sans-serif;
+        margin: 0;
+        width: 100%;
+        font-size: 1em;
+      }
+      body {
+        margin: 0;
+        padding: 1ex;
+        position: relative;
+      }
+      
+      #colorHex, #colorRGB, #colorHSL, #colorName {
+        font-family: -apple-system;
+        font-size:2em;
+        font-style: bold;
+        font-weight: 900;
+      }
+      a {
+        color: midnightblue;
+      }
+      hr {border-color:darkred;border-width:1px;}
+
+      @media screen and (max-width:480) {body {}}
+      @media screen and (min-width:481) {body {max-width: 600px;}
+      @media screen and (max-width:1080px) {body {width:100%;}}
+    </style>
+    <script type="text/javascript">
+//    file read and image preview courtesy of MDN
+      oFReader = new FileReader(), rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump|text\/html)$/i;
+
+      oFReader.onload = function (oFREvent) {
+        document.getElementById("uploadPreview").src = oFREvent.target.result;
+      };
+
+      function loadImageFile() {
+        if (document.getElementById("uploadImage").files.length === 0) { return; }
+        var oFile = document.getElementById("uploadImage").files[0];
+        if (!rFilter.test(oFile.type)) { alert("You must select a valid image file!"); return; }
+        oFReader.readAsDataURL(oFile);
+      }
+    </script>
+<!--     Color Picker courtesy of HTML5 -->
+  </head>
+  <body onload="loadImageFile();">
+  <br /><hr /><br />
+    <center>
+
+      <h2>
+        <a onclick="window.open('https://ShortcutsPro.github.io/quickcolor')">QuickColor</a>
+          ⠀|⠀
+        <a onclick="window.open('https://cutz.bustl.io')">𝘽𝙪𝙨𝙩𝙡.•io</a>
+      </h2>
+      <br />
+      <h3>
+        a colorpicker for iOS Shortcuts
+      </h3>
+
+      <br /><hr /><br />
+      <div style="margin:auto; max-width:90%;">
+
+        <div id="html5DIV" style="margin-top: 1em;">
+          <input type="color" 
+             id="colorPicker" 
+             onchange="copyColor()" 
+             value="#ffffff" 
+             style="width:30%;" />
+        </div>
+        <br /><br />
+          <div id='select' style="font-style:bold;">
+            <h3 id="hint">
+              Tap the ↑ ellipse ↑ above
+              <br />
+              to open the color picker
+              <br />
+              <br />
+              To select with the eyedropper…
+              <br />
+              Load an ↓ image ↓ below 
+            </h3>
+            <br />
+            <div id="colorName"></div>      
+            <div id="colorHex"></div>
+            <div id="colorRGB"></div>
+            <div id="colorHSL"></div>    
+          </div>
+        </div>
+
+        <div name="uploadImage" style="margin:5ex;">
+<!--      <legend><h1>Image Upload Form</h1></legend> -->
+          <img id="uploadPreview" style="width: 320px; height:320px; object-fit: cover;" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+Cjxzdmcgd2lkdGg9IjE1MyIgaGVpZ2h0PSIxNTMiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8Zz4KICA8dGl0bGU+PzwvdGl0bGU+CiAgPHJlY3QgaWQ9ImV4dGVyblJlY3QiIGhlaWdodD0iMTUwIiB3aWR0aD0iMTUwIiB5PSIxLjUiIHg9IjEuNTAwMDI0IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZT0iIzY2NjY2NiIgZmlsbD0iIzk2OTY5NiIvPgogIDx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDYuNjY2NjcsIDAsIDAsIDYuNjY2NjcsIC05NjAuNSwgLTEwOTkuMzMpIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQWNtZSIgZm9udC1zaXplPSIyNSIgZm9udC1zdHlsZT0iYm9sZCIgZm9udC13ZWlnaHQ9IjMwMCIgaWQ9InF1ZXN0aW9uTWFyayIgeT0iMTg1IiB4PSIxNTYiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlPSIjNjY2NjY2IiBmaWxsPSIjZWNlY2VjIj4/PC90ZXh0PgogPC9nPgo8L3N2Zz4=" alt="Image preview" />
+          <div class="control" style="margin:5ex;">
+            <input id="uploadImage" type="file" name="myPhoto" onchange="loadImageFile();" style="max-width: 25vw; width: 75%; background:midnightblue; color:white; padding:1ex; margin:auto; font-size: 0.8em;" />
+          </div>
+        </div>
+        
+      </div>
+    </center>
+    <script>
+      let color = '';
+      const display = document.getElementById('colorHex');
+      const hint = document.getElementById('hint')
+
+      function copyColor() {
+        color = document.getElementById("colorPicker").value.toUpperCase();
+        sessionStorage.setItem('color', color)
+        document.getElementById('theme').setAttribute('content', color)
+        display.innerHTML = color;
+        display.setAttribute('style', 'color:'+color+';font-style:bold;')
+        hint.innerHTML = 'Tap the ↓ color code ↓ to copy';
+      }
+
+      document.getElementById('select').addEventListener('click', () => {
+        color = sessionStorage.getItem('color');
+        navigator.clipboard.writeText(color)
+        hint.innerHTML = color+ ' is copied. <br /><br /> Close this window to continue.'
+        console.log(color)
+      })
+    </script>
+  </body>
+</html>
