@@ -59,12 +59,34 @@
         padding: 1ex;
         color: var(--color);
         background: var(--background);
-
       }
       img { 
         display: box;
         max-width: 320px;
         object-fit: contain;
+      }
+      a {color: var(--color);}
+      input {
+        width:20%;
+        border:1px solid var(--color);
+      }
+      hr {
+        width:90%;
+        margin:1ex;
+        border:2px solid var(--highlight);
+        animation-name: expandHR;
+        animation-direction:  alternate;
+        animation-duration: 5s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+      }
+      @keyframes expandHR {0% {width:35%;}}
+      button{
+        color:var(--dark);
+        font:bold 2rem "Lucida Console", Courier, monospace;
+        background:var(--light);
+        border:10px solid var(--highlight);
+        padding:0.5ex;
       }
       .title {color:var(--color);}
       .name {
@@ -79,23 +101,6 @@
         font-style: italic;
         font-size: 1.3em;
       }
-      hr {
-        width:70%;
-        margin:1ex;
-        border:2px solid var(--highlight);
-        animation-name: expandHR;
-        animation-direction:  alternate;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
-        animation-duration: 5s;
-      }
-      @keyframes expandHR {0% {width:35%;}}
-
-      a {color: var(--color);}
-      input {
-        width:20%;
-        border:1px solid var(--color);
-      }
       .file-label {
         background: var(--background);
         color: var(--color);
@@ -104,9 +109,6 @@
         border: 1px solid var(--color);
       }
       #hint {font-size:1.1em;}
-      #colorHex, #colorRGB, #colorHSL, #colorName {
-        font: bold 1em/1.5em monospace;
-      }
     </style>
 
 <!-- file read and image preview courtesy of MDN -->
@@ -168,14 +170,14 @@
       </div>
 
 
-      <div id="select"> <!-- ↑. Selection Area. ↑ -->
+      <div id="select"> <!-- ↓. Selection Area. ↓ -->
 
         <div class="column is-full">
           <span id="hint"">
             Tap the colorbar ↑ above ↑ to open the color picker.
             <br />
             <br />
-            Load an image ↓ below ↓ to select with the eyedropper,  
+            Load an image ↓ below ↓ to select with the eyedropper, (Not yet a available on iOS) 
           </span>
         </div>
 
@@ -188,7 +190,7 @@
         
       </div> <!-- ↑. Selection Area. ↑ -->
 
-
+<!-- file read and image preview courtesy of MDN -->
       <div class="column is-full">
         <div name="uploadImage">
           <img id="uploadPreview" max-width="320px" style="object-fit:contain;" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+Cjxzdmcgd2lkdGg9IjE1MyIgaGVpZ2h0PSIxNTMiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8Zz4KICA8dGl0bGU+PzwvdGl0bGU+CiAgPHJlY3QgaWQ9ImV4dGVyblJlY3QiIGhlaWdodD0iMTUwIiB3aWR0aD0iMTUwIiB5PSIxLjUiIHg9IjEuNTAwMDI0IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZT0iIzY2NjY2NiIgZmlsbD0iIzk2OTY5NiIvPgogIDx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDYuNjY2NjcsIDAsIDAsIDYuNjY2NjcsIC05NjAuNSwgLTEwOTkuMzMpIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQWNtZSIgZm9udC1zaXplPSIyNSIgZm9udC1zdHlsZT0iYm9sZCIgZm9udC13ZWlnaHQ9IjMwMCIgaWQ9InF1ZXN0aW9uTWFyayIgeT0iMTg1IiB4PSIxNTYiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlPSIjNjY2NjY2IiBmaWxsPSIjZWNlY2VjIj4/PC90ZXh0PgogPC9nPgo8L3N2Zz4=" alt="Image preview" />
@@ -207,25 +209,30 @@
       </div>
 
 
-      <div class="column is-full"></div>
-    </center>
+    </center> <!-- End columns container -->
     <script>
 
       const display = document.getElementById('colorHex');
       const hint = document.getElementById('hint')
-      const rule = document.getElementsByTagName('hr')
+      const hr = document.getElementsByTagName('hr')
       const picker = document.getElementById("colorPicker")
       const theme = document.getElementById('theme')
       const name = document.querySelector('.name')
+      const select = document.getElementById('select')
       
       function copyColor() {
+        // save the current (latest) color value 
         let color = picker.value.toUpperCase();
         sessionStorage.setItem('color', color)
+
+        // redraw colored elements with the latest color
         theme.setAttribute('content', color)
         name.setAttribute('style', 'font-style:italic; color:'+color+';')
-        for (let i = 0; i < rule.length; i++) {
-          rule[i].setAttribute('style', 'width:70%; margin:1ex; border:2px solid '+color+'; animation-name:expandHR; animation-direction:alternate; animation-iteration-count:infinite; animation-timing-function:linear; animation-duration:5s;')
+        for (let i = 0; i < hr.length; i++) {
+          hr[i].setAttribute('style', 'border:2px solid '+color+';')
         }
+
+        // Create a colored button to copy the selection
         let button = document.getElementById('button')
         if (button == null) {
           button = document.createElement('button')
@@ -233,12 +240,16 @@
           button.class = 'button is-medium'
           display.appendChild(button)
         }
-        button.setAttribute('style', 'color:var(--dark); font:bold 2em "Lucida Console", Courier, monospace; background:var(--light); border:10px solid '+color+'; padding:0.5ex;')
+        button.setAttribute('style', 'border:10px solid '+color+'; padding:0.5ex;')
         button.innerHTML = color;
+        
+        // Update the instructions on screen
         hint.innerHTML = 'Tap the ↓ color code ↓ to copy';
-      }
+      } // end copyColor()
 
-      document.getElementById('select').addEventListener('click', () => {
+      select.addEventListener('click', () => {
+        
+        // Get the last color value and add it to any previously copied colors, separated with a new line. 
         let color = sessionStorage.getItem('color');
         let copied = ''
         let stored = sessionStorage.getItem('copied')
@@ -246,12 +257,15 @@
           copied = stored+'\n'
         }
         copied += color
+        
+        // Save the updated list of colors and copy to clipboard
         sessionStorage.setItem('copied', copied)
-
         navigator.clipboard.writeText(copied)
-        hint.innerHTML = color+ ' is copied. <br />✅<br /> Close this window to continue.<br /><span style=\"font-size:0.8em\">Multiple colors will be separated by new lines.</span>'
         console.log(copied)
-      })
+
+        // Update instructions on screen
+        hint.innerHTML = color+ ' is copied. <br />✅<br /> Close this window to continue.<br /><span style=\"font-size:0.8em\">Multiple colors will be separated by new lines.</span>'
+      }) // end select(click)
     </script>
   </body>
 </html>
