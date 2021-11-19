@@ -2,55 +2,115 @@
 <html lang="en-US">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, minimum-scale=1, user-scaleable=no" />
 <!-- iOS support -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="QuickColor" />
-    <meta name="theme-color" id="theme" content="midnightblue" />
+    <meta name="theme-color" id="theme" content="#00CEE1" />
+    <link rel="icon" href="apple-touch-icon.png" />
       <title>
         QuickColor⠀|⠀𝘽𝙪𝙨𝙩𝙡.•io
       </title>
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="author" content="ShortcutsPro" />
-<!-- open graph link support -->
+<!-- open graph rich link support -->
     <meta property="og:title" content="QuickColor⠀|⠀𝘽𝙪𝙨𝙩𝙡.•io" />
     <meta property="og:image" content="image.jpeg" />
+    <meta property="og:author" content="ShortcutsPro" />
     <meta property="og:description" content="a colorpicker for iOS Shortcuts" />
-    <link rel="icon" href="apple-touch-icon.png" />
+
+<!-- Using Bulma CSS Framework for responsive column layout -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+
     <style>
       *, *::before, *::after {
         box-sizing: border-box;
         margin: 0;
       }
+      :root {
+        --dark: #333333;
+        --light: #EAEAEA;
+        --icon-color: #00CBDE;
+        --detail: #DE1300;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --color: var(--dark);
+          --background: var(--light);
+          --highlight: var(--icon-color);
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color: var(--light);
+          --background: var(--dark);
+          --highlight: var(--icon-color);
+        }
+      }
       html {
-        font-family: 'Acme', sans-serif;
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: 1em;
+        background: var(--background);
         margin: 0;
         width: 100%;
-        font-size: 1em;
       }
       body {
-        margin: 0;
+        margin: auto;
         padding: 1ex;
-        position: relative;
-      }
-      
-      #colorHex, #colorRGB, #colorHSL, #colorName {
-        font-family: -apple-system;
-        font-size:2em;
-        font-style: bold;
-        font-weight: 900;
-      }
-      a {
-        color: midnightblue;
-      }
-      hr {border-color:darkred;border-width:1px;}
+        color: var(--color);
+        background: var(--background);
 
-      @media screen and (max-width:480) {body {}}
-      @media screen and (min-width:481) {body {max-width: 600px;}
-      @media screen and (max-width:1080px) {body {width:100%;}}
+      }
+      img { 
+        display: box;
+        max-width: 320px;
+        object-fit: contain;
+      }
+      .title {color:var(--color);}
+      .name {
+        font-style: italic;
+        color: var(--highlight);
+      }
+      .sub-title {
+        font-style:normal;
+        font-size: 0.5em;
+      }
+      .tag-line {
+        font-style: italic;
+        font-size: 1.3em;
+      }
+      hr {
+        width:70%;
+        margin:1ex;
+        border:2px solid var(--highlight);
+        animation-name: expandHR;
+        animation-direction:  alternate;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-duration: 5s;
+      }
+      @keyframes expandHR {0% {width:35%;}}
+
+      a {color: var(--color);}
+      input {
+        width:20%;
+        border:1px solid var(--color);
+      }
+      .file-label {
+        background: var(--background);
+        color: var(--color);
+        margin: auto;
+        padding: 3px;
+        border: 1px solid var(--color);
+      }
+      #hint {font-size:1.1em;}
+      #colorHex, #colorRGB, #colorHSL, #colorName {
+        font: bold 1em/1.5em monospace;
+      }
     </style>
+
+<!-- file read and image preview courtesy of MDN -->
     <script type="text/javascript">
-//    file read and image preview courtesy of MDN
       oFReader = new FileReader(), rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump|text\/html)$/i;
 
       oFReader.onload = function (oFREvent) {
@@ -64,81 +124,133 @@
         oFReader.readAsDataURL(oFile);
       }
     </script>
-<!--     Color Picker courtesy of HTML5 -->
+
+
   </head>
-  <body onload="loadImageFile();">
-  <br /><hr /><br />
-    <center>
-
-      <h2>
-        <a onclick="window.open('https://ShortcutsPro.github.io/quickcolor')">QuickColor</a>
-          ⠀|⠀
-        <a onclick="window.open('https://cutz.bustl.io')">𝘽𝙪𝙨𝙩𝙡.•io</a>
-      </h2>
-      <br />
-      <h3>
-        a colorpicker for iOS Shortcuts
-      </h3>
-
-      <br /><hr /><br />
-      <div style="margin:auto; max-width:90%;">
-
-        <div id="html5DIV" style="margin-top: 1em;">
-          <input type="color" 
-             id="colorPicker" 
-             onchange="copyColor()" 
-             value="#ffffff" 
-             style="width:30%;" />
+  <body>
+    <center class="columns is-centered is-multiline">
+      <div id="top" class="column is-full"></div>
+      
+      <div class="column is-full" >
+        <hr />
+        <div class="title">
+          <a onclick="window.open('https://github.com/ShortcutsPro/quickcolor')">
+            <span class="name">
+              QuickColor
+            </span>
+          </a>
+            ⠀|⠀
+          <a onclick="window.open('about:blank')">
+            <span class="sub-title">
+              𝘽𝙪𝙨𝙩𝙡.•io
+            </span>
+          </a>
         </div>
-        <br /><br />
-          <div id='select' style="font-style:bold;">
-            <h3 id="hint">
-              Tap the ↑ ellipse ↑ above
-              <br />
-              to open the color picker
-              <br />
-              <br />
-              To select with the eyedropper…
-              <br />
-              Load an ↓ image ↓ below 
-            </h3>
+      </div>
+
+      <div class="column is-full">
+        <span class="tag-line"">
+            a color picker for iOS Shortcuts
+        </span>
+        <hr />
+      </div>
+
+
+<!--     Color Picker courtesy of HTML5 -->
+        
+      <div id="picker" class="column is-full">
+        <div class="control">
+          <input type="color"
+             id="colorPicker"
+             onchange="copyColor()"
+             value="#00CBDE" />
+        </div>
+      </div>
+
+
+      <div id="select"> <!-- ↑. Selection Area. ↑ -->
+
+        <div class="column is-full">
+          <span id="hint"">
+            Tap the colorbar ↑ above ↑ to open the color picker.
             <br />
-            <div id="colorName"></div>      
-            <div id="colorHex"></div>
-            <div id="colorRGB"></div>
-            <div id="colorHSL"></div>    
-          </div>
+            <br />
+            Load an image ↓ below ↓ to select with the eyedropper,  
+          </span>
         </div>
 
-        <div name="uploadImage" style="margin:5ex;">
-<!--      <legend><h1>Image Upload Form</h1></legend> -->
-          <img id="uploadPreview" style="width: 320px; height:320px; object-fit: cover;" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+Cjxzdmcgd2lkdGg9IjE1MyIgaGVpZ2h0PSIxNTMiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8Zz4KICA8dGl0bGU+PzwvdGl0bGU+CiAgPHJlY3QgaWQ9ImV4dGVyblJlY3QiIGhlaWdodD0iMTUwIiB3aWR0aD0iMTUwIiB5PSIxLjUiIHg9IjEuNTAwMDI0IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZT0iIzY2NjY2NiIgZmlsbD0iIzk2OTY5NiIvPgogIDx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDYuNjY2NjcsIDAsIDAsIDYuNjY2NjcsIC05NjAuNSwgLTEwOTkuMzMpIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQWNtZSIgZm9udC1zaXplPSIyNSIgZm9udC1zdHlsZT0iYm9sZCIgZm9udC13ZWlnaHQ9IjMwMCIgaWQ9InF1ZXN0aW9uTWFyayIgeT0iMTg1IiB4PSIxNTYiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlPSIjNjY2NjY2IiBmaWxsPSIjZWNlY2VjIj4/PC90ZXh0PgogPC9nPgo8L3N2Zz4=" alt="Image preview" />
-          <div class="control" style="margin:5ex;">
-            <input id="uploadImage" type="file" name="myPhoto" onchange="loadImageFile();" style="max-width: 25vw; width: 75%; background:midnightblue; color:white; padding:1ex; margin:auto; font-size: 0.8em;" />
-          </div>
+        <div class="column is-full">
+          <div id="colorName"></div>      
+          <div id="colorHex"></div>
+          <div id="colorRGB"></div>
+          <div id="colorHSL"></div>    
         </div>
         
+      </div> <!-- ↑. Selection Area. ↑ -->
+
+
+      <div class="column is-full">
+        <div name="uploadImage">
+          <img id="uploadPreview" max-width="320px" style="object-fit:contain;" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+Cjxzdmcgd2lkdGg9IjE1MyIgaGVpZ2h0PSIxNTMiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8Zz4KICA8dGl0bGU+PzwvdGl0bGU+CiAgPHJlY3QgaWQ9ImV4dGVyblJlY3QiIGhlaWdodD0iMTUwIiB3aWR0aD0iMTUwIiB5PSIxLjUiIHg9IjEuNTAwMDI0IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZT0iIzY2NjY2NiIgZmlsbD0iIzk2OTY5NiIvPgogIDx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDYuNjY2NjcsIDAsIDAsIDYuNjY2NjcsIC05NjAuNSwgLTEwOTkuMzMpIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQWNtZSIgZm9udC1zaXplPSIyNSIgZm9udC1zdHlsZT0iYm9sZCIgZm9udC13ZWlnaHQ9IjMwMCIgaWQ9InF1ZXN0aW9uTWFyayIgeT0iMTg1IiB4PSIxNTYiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlPSIjNjY2NjY2IiBmaWxsPSIjZWNlY2VjIj4/PC90ZXh0PgogPC9nPgo8L3N2Zz4=" alt="Image preview" />
+        </div>
       </div>
+      
+      <div class="column is-3">
+        <div class="file">
+          <label class="file-label">
+            <input id="uploadImage" type="file" name="image" onchange="loadImageFile()" class="file-input" />
+            <span class="file-label">
+              📂 Select an image…
+            </span>
+          </label>
+        </div>
+      </div>
+
+
+      <div class="column is-full"></div>
     </center>
     <script>
-      let color = '';
+
       const display = document.getElementById('colorHex');
       const hint = document.getElementById('hint')
-
+      const rule = document.getElementsByTagName('hr')
+      const picker = document.getElementById("colorPicker")
+      const theme = document.getElementById('theme')
+      const name = document.querySelector('.name')
+      
       function copyColor() {
-        color = document.getElementById("colorPicker").value.toUpperCase();
+        let color = picker.value.toUpperCase();
         sessionStorage.setItem('color', color)
-        document.getElementById('theme').setAttribute('content', color)
-        display.innerHTML = color;
-        display.setAttribute('style', 'color:'+color+';font-style:bold;')
+        theme.setAttribute('content', color)
+        name.setAttribute('style', 'font-style:italic; color:'+color+';')
+        for (let i = 0; i < rule.length; i++) {
+          rule[i].setAttribute('style', 'width:70%; margin:1ex; border:2px solid '+color+'; animation-name:expandHR; animation-direction:alternate; animation-iteration-count:infinite; animation-timing-function:linear; animation-duration:5s;')
+        }
+        let button = document.getElementById('button')
+        if (button == null) {
+          button = document.createElement('button')
+          button.id = 'button'
+          button.class = 'button is-medium'
+          display.appendChild(button)
+        }
+        button.setAttribute('style', 'color:var(--dark); font:bold 2em "Lucida Console", Courier, monospace; background:var(--light); border:10px solid '+color+'; padding:0.5ex;')
+        button.innerHTML = color;
         hint.innerHTML = 'Tap the ↓ color code ↓ to copy';
       }
 
       document.getElementById('select').addEventListener('click', () => {
-        color = sessionStorage.getItem('color');
-        navigator.clipboard.writeText(color)
-        hint.innerHTML = color+ ' is copied. <br /><br /> Close this window to continue.'
-        console.log(color)
+        let color = sessionStorage.getItem('color');
+        let copied = ''
+        let stored = sessionStorage.getItem('copied')
+        if (stored != null) {
+          copied = stored+'\n'
+        }
+        copied += color
+        sessionStorage.setItem('copied', copied)
+
+        navigator.clipboard.writeText(copied)
+        hint.innerHTML = color+ ' is copied. <br />✅<br /> Close this window to continue.<br /><span style=\"font-size:0.8em\">Multiple colors will be separated by new lines.</span>'
+        console.log(copied)
       })
     </script>
   </body>
