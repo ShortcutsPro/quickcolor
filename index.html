@@ -18,114 +18,65 @@
     <meta property="og:author" content="ShortcutsPro" />
     <meta property="og:description" content="a colorpicker for iOS Shortcuts" />
     <link rel="icon" href="apple-touch-icon.png" />
-<!-- Using Bulma CSS Framework for responsive column layout -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
 
     <style>
-      *, *::before, *::after {
-        box-sizing: border-box;
-        margin: 0;
-      }
+      *, *::before, *::after { box-sizing:border-box; margin:0; }
       :root {
         --dark: #333333;
         --light: #EAEAEA;
         --icon-color: #00CBDE;
       }
       @media (prefers-color-scheme: light) {
-        :root {
-          --color: var(--dark);
-          --background: var(--light);
-        }
+        :root {--color:var(--dark); --background:var(--light);}
       }
       @media (prefers-color-scheme: dark) {
-        :root {
-          --color: var(--light);
-          --background: var(--dark);
-        }
+        :root {--color:var(--light); --background:var(--dark);}
       }
-      html {
-        font-family: "Times New Roman", Times, serif;
-        font-size: 1em;
-        color: var(--color);
-        background: var(--background);
-        margin: 0;
-        width: 100%;
+      html {font-family:monospace; margin: 0;
       }
-      body {
-        font-family: "Times New Roman", Times, serif;
-        margin: auto;
-        padding: 1ex;
-        min-height: 100vh;
-        align-items: center;
-        color: var(--color);
-        background: var(--background);
+      body {margin:auto; min-height:100vh; align-items:center; text-align:center; color:var(--color); background:var(--background); position:relative;
       }
-      .popup-parent {
-        position: relative;
-        background: 'var(--icon-color)';
-        width: 100%;
-        font-family: "Times New Roman", Times, serif;
-        font-weight: 100;
-        font-size: 10em;
-        text-align: center;
+      .popup-parent {position:absolute; top:5vh; left:35vw; background:'var(--icon-color)'; width: 100%;
       }
       @media(max-width: 500px) {
-        .layout_default.picker_wrapper {
-           font-size: 7px;
-         }
-         .layout_default .picker_editor {
-            width: 100%;
-         }
+        .layout_default.picker_wrapper {font-size: 7px;}
+        .layout_default .picker_editor {width: 100%;}
        }
     </style>
     <script src="vanilla-picker.min.js"></script>
     <script>
       window.onload = init;
       function init() {
-          "use strict";
-          function $(selector, context) {
-              return (context || document).querySelector(selector);
-          }
-          var parentBasic = $('#basic')
-          /* Basic example */
-          var popupBasic = new Picker({
-            parent: parentBasic,
-            popup: 'bottom',
-            editorFormat: 'rgba',
-            alpha: true,
-            color: '#00CBDEFF',
-            onChange: function (color) {
-              sessionStorage.setItem('color',`${color.hex}
+        "use strict";
+        function $(selector, context) {
+            return (context || document).querySelector(selector);
+        }
+        var parentBasic = $('#basic')
+        /* Basic example */
+        var popupBasic = new Picker({
+          parent: parentBasic,
+          popup: 'bottom',
+          editorFormat: 'rgba',
+          alpha: true,
+          color: '#00CBDEFF',
+          onChange: function (color) {
+            sessionStorage.setItem('color',`${color.hex}
 ${color.rgbaString}
 ${color.hslaString}`)
-              document.getElementById('theme').setAttribute('content', `${color.hex}`)
-              document.body.style.backgroundColor = color.rgbaString;}
-            }
-          );
-        popupBasic.openHandler();
+            document.getElementById('theme').setAttribute('content', color.hex)
+            document.body.style.backgroundColor = color.rgbaString;}
+          }
+        );
+      popupBasic.openHandler();
       }
     </script>
   </head>
   <body>
-    <center class="columns is-centered is-multiline is-mobile">
-      <div id="top" class="column is-full"></div>
-
-      <div class="column is-full" ></div>
-
 <!--     Color Picker courtesy of vanilla-picker -->
-      <div class="column is-3"></div>
-      <div class="column is-4">
-        <center>
+    <center>
+      <div id="basic" class="popup-parent"></div>
+    </center>
 
-          <div id="basic" class="popup-parent"></div>
-
-        </center>
-      </div>
-      <div class="column is-3"></div>
-
-      <div class="column is-full"></div>. 
-
-    </center> <!-- End columns container -->
     <script>
       document.getElementById('basic').addEventListener('mouseup', () => {
         color = sessionStorage.getItem('color')
