@@ -53,12 +53,12 @@
         align-items:center; 
         text-align:center; 
         color:var(--color); 
-        background:var(--background); 
+        background:var(--background);
+        position: relative;
       }
       .popup-parent {
         position:fixed;
-        left:11%;
-        background:'var(--icon-color)'; 
+        top: 10vh;
         width:100%;
       }
       @media(max-width:500px) {
@@ -67,7 +67,10 @@
       }
     </style>
 <!-- vanilla picker Copyright 2017-2018 Andreas Borgen, Adam Brooks, used with permission -->
-    <script src="/vanilla-picker/vanilla-picker.min.js"></script>
+    <script src="https://unpkg.com/vanilla-picker@2"></script>
+    <script src="vanilla-picker.csp.min.js"></script>
+    <link  href="vanilla-picker.csp.css" rel="stylesheet">
+<!--    <script src="/vanilla-picker/vanilla-picker.min.js"></script> -->
     <script>
       window.onload = init;
       function init() {
@@ -79,15 +82,23 @@
         /* Basic example */
         var popupBasic = new Picker({
           parent: parentBasic,
-          popup: 'bottom',
-          editorFormat: 'rgba',
+          popup: false,
+          editorFormat: 'hex',
           alpha: true,
           color: '#00CBDEFF',
           onChange: function (color) {
-            sessionStorage.setItem('color',`${color.hex}
-${color.rgbaString}
-${color.hslaString}`)
-            document.getElementById('theme').setAttribute('content', color.hex)
+            let colorObj = {
+              'hex': color.hex,
+              'rgbString': color.rgbString,
+              'hslString': color.hslString,
+              'rgbaString': color.rgbaString,
+              'rgba': color.rgba,
+              'hslaString': color.hslaString,
+              'hsla': color.hsla
+            }
+            let colorString = JSON.stringify(colorObj)
+            sessionStorage.setItem('color',colorString)
+            document.getElementById('theme').setAttribute('content', color.rgbString)
             document.body.style.backgroundColor = color.rgbaString;}
           }
         );
@@ -103,9 +114,16 @@ ${color.hslaString}`)
 
     <script>
       document.getElementById('basic').addEventListener('mouseup', () => {
-        color = sessionStorage.getItem('color')
-        navigator.clipboard.writeText(color)
-        console.log(color)
+        let color = sessionStorage.getItem('color')
+        let saved = sessionStorage.getItem('saved')
+        if (saved != null) {
+          saved += ',' + color
+        } else saved = color
+        sessionStorage.setItem('saved',saved)
+        let copy = '\[' + saved + '\]'
+        copy = JSON.stringify(JSON.parse(copy),null,'\t')
+        navigator.clipboard.writeText(copy)
+        console.log(copy)
       })
     </script>
   </body>
