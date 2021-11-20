@@ -77,8 +77,8 @@
     <link  href="vanilla-picker.csp.css" rel="stylesheet">
 <!--    <script src="/vanilla-picker/vanilla-picker.min.js"></script> -->
     <script>
-      const Q = new URL(document.location.href).searchParams
-      let startColor = Q.get('color') || '#00CBDEFF'
+      const Q = new URL(window.location.href).search
+      let startColor = Q || '#00CBDEFF'
       
       window.onload = init;
       function init() {
