@@ -61,6 +61,11 @@
         top: 10vh;
         width:100%;
       }
+      #message {
+        font: bold 1.5em monospace;
+        color:var(--light);
+        text-shadow: 3px 2px var(--dark);
+      }
       @media(max-width:500px) {
         .layout_default.picker_wrapper {font-size:7px;}
         .layout_default .picker_editor {width:100%;}
@@ -72,6 +77,9 @@
     <link  href="vanilla-picker.csp.css" rel="stylesheet">
 <!--    <script src="/vanilla-picker/vanilla-picker.min.js"></script> -->
     <script>
+      const Q = new URL(document.location.href).search
+      let startColor = Q || '#00CBDEFF'
+      
       window.onload = init;
       function init() {
         "use strict";
@@ -85,10 +93,12 @@
           popup: false,
           editorFormat: 'hex',
           alpha: true,
-          color: '#00CBDEFF',
+          color: startColor,
           onChange: function (color) {
-            let colorObj = {
-              'hex': color.hex,
+            
+            // Output using the picker color is missing most of the values, so recreate it from scratch.
+            color = {
+              'hex': color.hex.toUpperCase(),
               'rgbString': color.rgbString,
               'hslString': color.hslString,
               'rgbaString': color.rgbaString,
@@ -96,34 +106,57 @@
               'hslaString': color.hslaString,
               'hsla': color.hsla
             }
-            let colorString = JSON.stringify(colorObj)
-            sessionStorage.setItem('color',colorString)
             document.getElementById('theme').setAttribute('content', color.rgbString)
-            document.body.style.backgroundColor = color.rgbaString;}
+            document.body.style.backgroundColor = color.rgbaString;
+            sessionStorage.setItem('color',JSON.stringify(color))
           }
-        );
-      popupBasic.openHandler();
+        });
+        popupBasic.openHandler();
       }
     </script>
   </head>
   <body>
-
+    <div id="message"></div>
     <center>
       <div id="basic" class="popup-parent"></div>
     </center>
 
     <script>
       document.getElementById('basic').addEventListener('mouseup', () => {
-        let color = sessionStorage.getItem('color')
+        // Get latest selected color and array of saved colors
+        let color = JSON.parse(sessionStorage.getItem('color'))
         let saved = sessionStorage.getItem('saved')
+        
+        // If previously selected colors exist, add new color to the list, else create new array
         if (saved != null) {
-          saved += ',' + color
-        } else saved = color
-        sessionStorage.setItem('saved',saved)
-        let copy = '\[' + saved + '\]'
-        copy = JSON.stringify(JSON.parse(copy),null,'\t')
-        navigator.clipboard.writeText(copy)
-        console.log(copy)
+          saved = JSON.parse(saved)
+          saved.push(color)
+        } else {
+          color = '\['+JSON.stringify(color)+'\]'
+          saved = JSON.parse(color)
+        }
+        
+        // Make sure array contains only unique colors and save to session storage.  This is required due to using mouseup as the listener event, which will trigger multiple times if the screen is tapped outside of the picker.
+        saved = [ ...new Set(saved)]
+        sessionStorage.setItem('saved',JSON.stringify(saved))
+
+        let message = document.getElementById('message')
+        
+        // For each new, unique color, add a colored block on screen with the color hex code. 
+        saved.forEach(c => {
+          if (!document.getElementById(c.hex)) {
+            let print = document.createElement('div')
+            print.style = `background:${c.rgbaString}; display:block; border:2px solid white; width:20%; padding:0.5ex; margin:1px;`
+            print.id = c.hex
+            print.innerHTML = `${c.hex}`
+            message.appendChild(print)
+          }
+        })
+        
+        // Prettify and copy array of selected colors to clipboard
+        saved = JSON.stringify(saved,null,'\t')
+        navigator.clipboard.writeText(saved)
+        console.log(saved)
       })
     </script>
   </body>
