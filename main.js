@@ -40,7 +40,11 @@ function copyColor() {
   console.log(saved)
   return saved
 }
-
+//////////////////////////////////////////////////////
+//
+//.                QuickColor
+//
+//
 function init() {
   "use strict";
 
@@ -59,7 +63,8 @@ function init() {
     color: 'white',
     onChange: function (color) {
       
-      // Output using the picker color is missing most of the values, so recreate it from scratch.
+      // Output using the picker's 'color' object is missing most of the values, 
+      // so recreate it from scratch.
       color = {
         'hex': color.hex.toUpperCase(),
         'rgbString': color.rgbString,
@@ -76,7 +81,7 @@ function init() {
   });
   picker.openHandler();
   const Q = new URL(window.location.href).searchParams
-  let color = Q.get('color') || null
+  let color = decodeURIComponent(Q.get('color')) || null
   if (color != null) {
     picker.setColor(color,false)
     document.write(copyColor())
