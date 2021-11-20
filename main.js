@@ -60,7 +60,7 @@ function init() {
     popup: false,
     editorFormat: 'hex',
     alpha: true,
-    color: 'white',
+    color: 'yellow',
     onChange: function (color) {
       
       // Output using the picker's 'color' object is missing most of the values, 
@@ -82,7 +82,7 @@ function init() {
   picker.openHandler();
   const Q = new URL(window.location.href).searchParams
   let color = decodeURIComponent(Q.get('color')) || null
-  if (color != null) {
+  if (color != 'null') {
     picker.setColor(color,false)
     document.write(copyColor())
   }
